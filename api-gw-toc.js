@@ -2,12 +2,14 @@
 let body = $response.body;
 let obj = JSON.parse(body);
 
-// 在这里修改返回值，根据需要修改 obj 内容
-// obj.data = "modified data";  // 示例：修改返回数据中的 data 字段
+// 打印原始返回值到日志
+console.log("Original Response: ", JSON.stringify(obj));
 
-// 打印原始和修改后的返回值到日志
-console.log("Original Response: ", obj);
-//console.log("Modified Response: ", JSON.stringify(obj));
+// 修改 data 字段的值
+obj.data = "modified data";  // 你可以根据需要修改为其他值，例如新的时间戳
 
-//body = JSON.stringify(obj);
+// 打印修改后的返回值到日志
+console.log("Modified Response: ", JSON.stringify(obj));
+
+body = JSON.stringify(obj);
 $done({body});
