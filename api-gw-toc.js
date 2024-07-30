@@ -28,6 +28,7 @@ if(body && body !== undefined){
             
             // 打印修改后的返回值到日志
             console.log(formattedDate);
+            console.log(JSON.stringify(obj));
             
             body = JSON.stringify(obj);
         } else {
