@@ -2,6 +2,8 @@
 let body = $response.body;
 let obj;
 
+console.log(body);
+
 try {
     let obj = JSON.parse(body);
     
