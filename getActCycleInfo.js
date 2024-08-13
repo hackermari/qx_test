@@ -9,21 +9,26 @@ if(body && body !== undefined){
         // 打印原始返回值到日志
         console.log(JSON.stringify(obj));
     
-        // 修改 serverTime 的值为 actCycleDetails 最后一个元素的 beginTime
+        // 找到最接近当前日期的 beginTime
         if (obj && obj.data && obj.data.actCycleDetails && obj.data.actCycleDetails.length > 0) {
-            let lastCycle = obj.data.actCycleDetails[obj.data.actCycleDetails.length - 1];
-            obj.data.serverTime = lastCycle.beginTime;
+            let closestCycle = obj.data.actCycleDetails.reduce((closest, cycle) => {
+                let cycleDate = new Date(cycle.beginTime);
+                return (cycleDate >= currentDate && (!closest || cycleDate < new Date(closest.beginTime))) ? cycle : closest;
+            }, null);
     
-            // 打印修改后的返回值到日志
-            console.log(JSON.stringify(obj));
+            if (closestCycle) {
+                obj.data.serverTime = closestCycle.beginTime;
     
-            body = JSON.stringify(obj);
-        } else {
-            console.log("No data field found in the response.");
+                // 打印修改后的返回值到日志
+                console.log("Modified Response: ", JSON.stringify(obj));
+    
+                body = JSON.stringify(obj);
+            } else {
+                console.log("No upcoming actCycleDetails found.");
+            }
+        } catch (e) {
+            console.log(e.message);
         }
-    } catch (e) {
-        console.log(e.message);
-    }
 }else{
     console.log(body);
 }
