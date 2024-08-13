@@ -7,7 +7,7 @@ if (body) {
         obj = JSON.parse(body);
     
         // 打印原始返回值到日志
-        console.log("Original Response: ", JSON.stringify(obj));
+        console.log(JSON.stringify(obj));
 
         // 获取当前日期的时间戳
         let currentDate = new Date().getTime();
@@ -30,13 +30,13 @@ if (body) {
             }
 
             // 打印修改后的返回值到日志
-            console.log("Modified Response: ", JSON.stringify(obj));
+            console.log(JSON.stringify(obj));
             body = JSON.stringify(obj); // 更新 body 以反映修改后的数据
         } else {
             console.log("No actCycleDetails found or it's empty.");
         }
     } catch (e) {
-        console.log("JSON Parse error: ", e.message);
+        console.log(e.message);
     }
 } else {
     console.log("Empty or undefined response body.");
