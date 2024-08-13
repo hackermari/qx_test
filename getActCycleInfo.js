@@ -8,7 +8,10 @@ if(body && body !== undefined){
     
         // 打印原始返回值到日志
         console.log(JSON.stringify(obj));
-    
+
+        // 获取当前日期
+        let currentDate = new Date();
+        
         // 找到最接近当前日期的 beginTime
         if (obj && obj.data && obj.data.actCycleDetails && obj.data.actCycleDetails.length > 0) {
             let closestCycle = obj.data.actCycleDetails.reduce((closest, cycle) => {
