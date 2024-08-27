@@ -1,4 +1,4 @@
-// taskReward.js
+// taskReward.js屏蔽失败遮罩
 let body = $response.body;
 let obj;
 
@@ -10,18 +10,16 @@ if(body && body !== undefined){
         // 打印原始返回值到日志
         console.log(JSON.stringify(obj));
         
-        // 修改 code 字段为 999999，data 字段为 "error"
-        if (obj) {
-            obj.success  = true;
-
-            // 打印修改后的返回值到日志
-            console.log(JSON.stringify(obj));
-
-            // 更新 body 以反映修改后的数据
-            body = JSON.stringify(obj);
+        // 判断 success 是否为 false
+        if (obj.success === false) {
+            console.log("Response rejected due to success being false.");
+            $done({ response: { status: 403, body: "Request Rejected" } }); // 直接拒绝请求
         } else {
-            console.log("No taskReachMsgList found in the response.");
+            // 继续处理响应
+            console.log("Response accepted.");
+            $done({ body });
         }
+        
     } catch (e) {
         console.log(e.message);
     }
