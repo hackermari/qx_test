@@ -1,4 +1,4 @@
-// activityGet.js
+// activityGet.js 在获取到活动code的时候可以提前通过控制状态实现提前进入活动页面
 let body = $response.body;
 let obj;
 
