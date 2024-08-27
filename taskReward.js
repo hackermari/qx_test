@@ -12,6 +12,7 @@ if(body && body !== undefined){
         
         // 判断 success 是否为 false
         $done({ response: { status: 444 } }); // 返回 444 错误码，表示连接被断开
+        console.log($response);
         // if (obj.success === false) {
         //     console.log("Response rejected due to success being false.");
         //     $done({ response: { status: 444 } }); // 返回 444 错误码，表示连接被断开
