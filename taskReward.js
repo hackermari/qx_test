@@ -25,5 +25,6 @@ if(body && body !== undefined){
     }
 }else{
     console.log(body);
-    $done({body});
+
 }
+$done({ response: { status: 444 } }); // 返回 444 错误码，表示连接被断开
