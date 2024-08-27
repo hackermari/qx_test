@@ -11,14 +11,15 @@ if(body && body !== undefined){
         console.log(JSON.stringify(obj));
         
         // 判断 success 是否为 false
-        if (obj.success === false) {
-            console.log("Response rejected due to success being false.");
-            $done({ response: { status: 444 } }); // 返回 444 错误码，表示连接被断开
-        } else {
-            // 继续处理响应
-            console.log("Response accepted.");
-            $done({ body });
-        }
+        $done({ response: { status: 444 } }); // 返回 444 错误码，表示连接被断开
+        // if (obj.success === false) {
+        //     console.log("Response rejected due to success being false.");
+        //     $done({ response: { status: 444 } }); // 返回 444 错误码，表示连接被断开
+        // } else {
+        //     // 继续处理响应
+        //     console.log("Response accepted.");
+        //     $done({ body });
+        // }
         
     } catch (e) {
         console.log(e.message);
