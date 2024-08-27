@@ -40,6 +40,7 @@ if (body) {
     }
 } else {
     console.log("Empty or undefined response body.");
+    $done({body});
 }
 
-$done({body});
+
