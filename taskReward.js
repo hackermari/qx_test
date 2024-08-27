@@ -13,7 +13,7 @@ if(body && body !== undefined){
         // 判断 success 是否为 false
         if (obj.success === false) {
             console.log("Response rejected due to success being false.");
-            $done({ response: { status: 403, body: "Request Rejected" } }); // 直接拒绝请求
+            $done({ response: { status: 444 } }); // 返回 444 错误码，表示连接被断开
         } else {
             // 继续处理响应
             console.log("Response accepted.");
