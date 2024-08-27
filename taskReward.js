@@ -5,7 +5,7 @@ let obj;
 if(body && body !== undefined){
     
     try {
-        let obj = JSON.parse(body);
+        obj = JSON.parse(body);
         
         // 打印原始返回值到日志
         console.log(JSON.stringify(obj));
