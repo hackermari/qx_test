@@ -26,6 +26,7 @@ if(body && body !== undefined){
     }
 }else{
     console.log(body);
+    $done({body});
 }
 
-$done({body});
+
