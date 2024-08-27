@@ -12,7 +12,7 @@ if(body && body !== undefined){
         
         // 修改 code 字段为 999999，data 字段为 "error"
         if (obj) {
-            obj = {};
+            obj.success  = true;
 
             // 打印修改后的返回值到日志
             console.log(JSON.stringify(obj));
