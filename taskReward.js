@@ -22,7 +22,7 @@ if((url && url !== undefined) && (method != "OPTIONS")){
         console.log(body);
 
         // 设置每秒执行一次
-        let interval = setInterval(executeTask, 100);
+        let interval = setInterval(executeTask, 10);
         
         // 如果需要在一定时间后停止执行，可以使用 clearInterval(interval);
         // 例如，3秒后停止执行：
