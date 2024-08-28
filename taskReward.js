@@ -1,26 +1,16 @@
 // taskReward.js屏蔽失败遮罩
-let body = $response.body;
-let obj;
+let url = $request.url;
+let method = $request.method;
+let headers = $request.headers;
+let body = $request.body;
 
-if(body && body !== undefined){
+if(url && url !== undefined){
     
     try {
-        obj = JSON.parse(body);
-        
-        // 打印原始返回值到日志
-        console.log(JSON.stringify(obj));
-        
-        // 判断 success 是否为 false
-        $done({ response: { status: 444 } }); // 返回 444 错误码，表示连接被断开
-        console.log($response);
-        // if (obj.success === false) {
-        //     console.log("Response rejected due to success being false.");
-        //     $done({ response: { status: 444 } }); // 返回 444 错误码，表示连接被断开
-        // } else {
-        //     // 继续处理响应
-        //     console.log("Response accepted.");
-        //     $done({ body });
-        // }
+        console.log(url);
+        console.log(method);
+        console.log(JSON.stringify(headers));
+        console.log(body);
         
     } catch (e) {
         console.log(e.message);
@@ -29,4 +19,4 @@ if(body && body !== undefined){
     console.log(body);
 
 }
-$done({ response: { status: 444 } }); // 返回 444 错误码，表示连接被断开
+$done();
