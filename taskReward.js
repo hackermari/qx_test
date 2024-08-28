@@ -29,7 +29,7 @@ if(url && url !== undefined){
         
         // 由于 Quantumult X 脚本需要调用 $done() 完成执行，不能无限运行
         // 所以在脚本执行结束时调用 $done()
-        setTimeout(() => $done(), 30000 + 1000); // 31秒后结束脚本
+        setTimeout(() => $done(), 30000000 + 1000); // 31秒后结束脚本
     } catch (e) {
         console.log(e.message);
     }
