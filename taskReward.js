@@ -3,6 +3,7 @@ let url = $request.url;
 let method = $request.method;
 let headers = $request.headers;
 let body = $request.body;
+let index = 1;
 
 let targetUrl = url;
 let options = {
@@ -25,11 +26,11 @@ if((url && url !== undefined) && (method != "OPTIONS")){
         
         // 如果需要在一定时间后停止执行，可以使用 clearInterval(interval);
         // 例如，3秒后停止执行：
-        setTimeout(() => clearInterval(interval), 3000);
+        setTimeout(() => clearInterval(interval), 10000);
         
         // 由于 Quantumult X 脚本需要调用 $done() 完成执行，不能无限运行
         // 所以在脚本执行结束时调用 $done()
-        setTimeout(() => $done(), 3000 + 100); // 3秒后结束脚本
+        setTimeout(() => $done(), 10000 + 100); // 3秒后结束脚本
         
     } catch (e) {
         console.log(e.message);
@@ -40,7 +41,8 @@ if((url && url !== undefined) && (method != "OPTIONS")){
 }
 
 function executeTask() {
-    console.log(method);
+    index = index + 1
+    console.log(index);
     // $task.fetch(options).then(response => {
     //     console.log(response.statusCode);
     //     console.log(response.body);
