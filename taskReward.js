@@ -3,7 +3,6 @@ let url = $request.url;
 let method = $request.method;
 let headers = $request.headers;
 let body = $request.body;
-let index = 1;
 
 let targetUrl = url;
 let options = {
@@ -41,8 +40,8 @@ if((url && url !== undefined) && (method != "OPTIONS")){
 }
 
 function executeTask() {
-    index = index + 1
-    console.log(index);
+    let timestamp = new Date().toISOString();
+    console.log(timestamp);
     // $task.fetch(options).then(response => {
     //     console.log(response.statusCode);
     //     console.log(response.body);
