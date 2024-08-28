@@ -12,7 +12,7 @@ let options = {
     body: body
 };
 
-if(url && url !== undefined){
+if((url && url !== undefined) && (method != "OPTIONS")){
     
     try {
         console.log(url);
