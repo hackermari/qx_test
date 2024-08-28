@@ -40,14 +40,14 @@ if((url && url !== undefined) && (method != "OPTIONS")){
 }
 
 function executeTask() {
-
-    $task.fetch(options).then(response => {
-        console.log(response.statusCode);
-        console.log(response.body);
-        // $done();
-    }, reason => {
-        console.log(reason.error);
-        $done({body: reason.error});
-    });
+    console.log(method);
+    // $task.fetch(options).then(response => {
+    //     console.log(response.statusCode);
+    //     console.log(response.body);
+    //     // $done();
+    // }, reason => {
+    //     console.log(reason.error);
+    //     $done({body: reason.error});
+    // });
     
 }
