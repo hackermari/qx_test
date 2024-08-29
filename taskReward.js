@@ -42,13 +42,13 @@ if((url && url !== undefined) && (method != "OPTIONS")){
 function executeTask() {
     let timestamp = new Date().toISOString();
     console.log(timestamp);
-    // $task.fetch(options).then(response => {
-    //     console.log(response.statusCode);
-    //     console.log(response.body);
-    //     // $done();
-    // }, reason => {
-    //     console.log(reason.error);
-    //     $done({body: reason.error});
-    // });
+    $task.fetch(options).then(response => {
+        console.log(response.statusCode);
+        console.log(response.body);
+        // $done();
+    }, reason => {
+        console.log(reason.error);
+        $done({body: reason.error});
+    });
     
 }
