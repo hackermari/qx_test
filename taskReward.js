@@ -125,26 +125,26 @@ function update(token) {
     const update_url = 'http://27.148.201.109:5700/open/envs';  // 青龙地址
     let update_timestamp = new Date().toISOString();
     
-    // const update_data = [{
-    //     name: 'zeekr_headers_x',  // 变量名
-    //     value: headers,     // 变量值
-    //     remarks: "1"//update_timestamp   // 备注
-    // }];
+    const update_data = [{
+        name: 'zeekr_headers_x',  // 变量名
+        value: headers,     // 变量值
+        remarks: update_timestamp   // 备注
+    }];
 
-    // const update_options = {
-    //     url: update_url,
-    //     method: 'POST',
-    //     headers: {
-    //         'Authorization': `Bearer ${token}`,
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(update_data)
-    // };
+    const update_options = {
+        url: update_url,
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(update_data)
+    };
 
-    // $task.fetch(update_options).then(response => {
-    //     console.log(response.body);
-    // }).catch(error => {
-    //     console.log(`Error updating variable: ${error}`);
-    // });
+    $task.fetch(update_options).then(response => {
+        console.log(response.body);
+    }).catch(error => {
+        console.log(`Error updating variable: ${error}`);
+    });
     
 }
