@@ -95,17 +95,24 @@ async function delates(token) {
         for (const item of panduan) {
             if (item.name === 'zeekr_headers_x') {
                 const delete_url = 'http://27.148.201.109:5700/open/envs';
-                // const delete_id = [item.id];
-
-                const deleteResponse = await fetch(delete_url, {
+                
+                const delete_options = {
+                    url: delete_url,
                     method: 'DELETE',
-                    headers: delates_headers,
-                    body: JSON.stringify([item.id])   // 删除变量 id为ck的id值
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    // 将 id 包装成对象数组
+                    body: JSON.stringify([{ id: item.id }])
+                };
+
+                $task.fetch(delete_options).then(response => {
+                    //await update(token);
+                    console.log(response.body);  // 输出返回的响应
+                }).catch(error => {
+                    console.log(`Error deleting variable: ${error}`);
                 });
-                const deleteResult = await deleteResponse.json();
-                console.log(JSON.stringify([item.id]));
-                console.log(JSON.stringify(deleteResult));
-                //await update(token);
             }
         }
     } catch (error) {
