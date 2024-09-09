@@ -72,7 +72,7 @@ async function getQinglongToken() {
         console.log(getTk);
         // await delates(getTk);
     } catch (error) {
-        console.error("Error fetching token:", error);
+        console.log("Error fetching token:", error);
     }
 }
 
@@ -102,7 +102,7 @@ async function delates(token) {
             }
         }
     } catch (error) {
-        console.error("Error deleting variable:", error);
+        console.log("Error deleting variable:", error);
     }
 }
 
