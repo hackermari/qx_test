@@ -22,37 +22,12 @@ if((url && url !== undefined) && (method != "OPTIONS")){
 
         getQinglongToken();
         
-        // 设置每秒执行一次
-        let interval = setInterval(executeTask, 100);
-        
-        // 如果需要在一定时间后停止执行，可以使用 clearInterval(interval);
-        // 例如，3秒后停止执行：
-        setTimeout(() => clearInterval(interval), 3000);
-        
-        // 由于 Quantumult X 脚本需要调用 $done() 完成执行，不能无限运行
-        // 所以在脚本执行结束时调用 $done()
-        setTimeout(() => $done(), 3000 + 100); // 3秒后结束脚本
-        
     } catch (e) {
         console.log(e.message);
     }
 }else{
     console.log(body);
     $done();
-}
-
-function executeTask() {
-    let timestamp = new Date().toISOString();
-    // console.log(timestamp);
-    // $task.fetch(options).then(response => {
-    //     console.log(response.statusCode);
-    //     console.log(response.body);
-    //     // $done();
-    // }, reason => {
-    //     console.log(reason.error);
-    //     $done({body: reason.error});
-    // });
-    
 }
 
 // 获取青龙token
