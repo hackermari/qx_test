@@ -127,7 +127,7 @@ function update(token) {
     
     const update_data = [{
         name: 'zeekr_headers_x',  // 变量名
-        value: headers,     // 变量值
+        value: JSON.stringify(headers),     // 变量值
         remarks: update_timestamp   // 备注
     }];
 
