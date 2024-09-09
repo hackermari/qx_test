@@ -95,12 +95,12 @@ async function delates(token) {
         for (const item of panduan) {
             if (item.name === 'zeekr_headers_x') {
                 const delete_url = 'http://27.148.201.109:5700/open/envs';
-                const delete_id = [item.id];
+                // const delete_id = [item.id];
 
                 const deleteResponse = await fetch(delete_url, {
                     method: 'DELETE',
                     headers: delates_headers,
-                    json: item.id  // 删除变量 id为ck的id值
+                    body: JSON.stringify([item.id])   // 删除变量 id为ck的id值
                 });
                 const deleteResult = await deleteResponse.json();
                 console.log(JSON.stringify(deleteResult));
