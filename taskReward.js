@@ -123,25 +123,28 @@ async function delates(token) {
 // 更新变量
 async function update(token) {
     const update_url = 'http://27.148.201.109:5700/open/envs';  // 青龙地址
+    let update_timestamp = new Date().toISOString();
+    
     const update_data = [{
         name: 'zeekr_headers_x',  // 变量名
         value: headers,     // 变量值
-        remarks: new Date().toISOString()   // 备注
+        remarks: update_timestamp   // 备注
     }];
-    const update_headers = {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+
+    const update_options = {
+        url: update_url,
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(update_data)
     };
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: update_headers,
-            body: JSON.stringify(update_data)  // 添加变量
-        });
-        const result = await response.json();
-        console.log(result);
-    } catch (error) {
-        console.log(error);
-    }
+    $task.fetch(update_options).then(response => {
+        console.log(response.body);
+    }).catch(error => {
+        console.log(`Error updating variable: ${error}`);
+    });
+    
 }
