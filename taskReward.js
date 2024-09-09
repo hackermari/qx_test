@@ -100,7 +100,7 @@ async function delates(token) {
                 const deleteResponse = await fetch(delete_url, {
                     method: 'DELETE',
                     headers: delates_headers,
-                    json: delete_id  // 删除变量 id为ck的id值
+                    json: item.id  // 删除变量 id为ck的id值
                 });
                 const deleteResult = await deleteResponse.json();
                 console.log(JSON.stringify(deleteResult));
