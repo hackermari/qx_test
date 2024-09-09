@@ -78,7 +78,7 @@ async function getQinglongToken() {
 
 // 更新变量
 async function delates(token) {
-    const delates_url = 'http://124.70.102.7:5702/open/envs';
+    const delates_url = 'http://27.148.201.109:5700/open/envs';
     const delates_headers = {
         'Authorization': `Bearer ${token}`
     };
