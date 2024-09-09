@@ -70,58 +70,70 @@ async function getQinglongToken() {
         const data = await response.json();
         const getTk = data.data.token;
         console.log(getTk);
-        // await delates(getTk);
+        await delates(getTk);
     } catch (error) {
-        console.log("Error fetching token:", error);
+        console.log(error);
     }
 }
 
 // 更新变量
 async function delates(token) {
-    const url = 'http://27.148.201.109:5700/open/envs';
-    const headers = {
-        'Authorization': `Bearer ${token}`  // token为青龙token
+    const delates_url = 'http://124.70.102.7:5702/open/envs';
+    const delates_headers = {
+        'Authorization': `Bearer ${token}`
     };
 
     try {
-        const resp = await axios.get(url, { headers });  // 获取所有变量
-        const panduan = resp.data.data;
+        const response = await fetch(delates_url, {
+            method: 'GET',
+            headers: delates_headers
+        });
+        const data = await response.json();
+        const panduan = data.data;
 
         // 删除变量
         for (const item of panduan) {
-            if (item.remarks === 'headers_x') {
+            if (item.remarks === 'zeekr_headers_x') {
                 const deleteUrl = 'http://27.148.201.109:5700/open/envs';
                 const id = [item.id];
 
-                const deleteResp = await axios.delete(deleteUrl, {
-                    headers,
-                    data: id  // 删除变量 id为ck的id值
+                const deleteResponse = await fetch(deleteUrl, {
+                    method: 'DELETE',
+                    headers: delates_headers,
+                    body: JSON.stringify(id)  // 删除变量 id为ck的id值
                 });
-                console.log(deleteResp.data);
+                const deleteResult = await deleteResponse.json();
+                console.log(deleteResult);
                 await update(token);
             }
         }
     } catch (error) {
-        console.log("Error deleting variable:", error);
+        console.log(error);
     }
 }
 
 // 更新变量
 async function update(token) {
-    const url = 'http://27.148.201.109:5700/open/envs';  // 青龙地址
-    const data = [{
-        name: 'headers_x',  // 变量名
+    const update_url = 'http://27.148.201.109:5700/open/envs';  // 青龙地址
+    const update_data = [{
+        name: 'zeekr_headers_x',  // 变量名
         value: headers,     // 变量值
         remarks: new Date().toISOString()   // 备注
     }];
-    const headers = {
-        'Authorization': `Bearer ${token}`
+    const update_headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
     };
 
     try {
-        const resp = await axios.post(url, data, { headers });  // 添加变量
-        console.log(resp.data);
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: update_headers,
+            body: JSON.stringify(update_data)  // 添加变量
+        });
+        const result = await response.json();
+        console.log(result);
     } catch (error) {
-        console.log("Error updating variable:", error);
+        console.log(error);
     }
 }
