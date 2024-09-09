@@ -59,8 +59,8 @@ function executeTask() {
 async function getQinglongToken() {
     const tokenUrl = 'http://27.148.201.109:5700/open/auth/token';
     const tokenParams = new URLSearchParams({
-        client_id: 'admin',
-        client_secret: 'Kaopuyun@2024'
+        client_id: 'Q-MyQ42n-iA9',
+        client_secret: 'yzFl3-K-8O65kXmoht2TsbFa'
     });
 
     try {
