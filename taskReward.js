@@ -128,7 +128,7 @@ async function update(token) {
     const update_data = [{
         name: 'zeekr_headers_x',  // 变量名
         value: headers,     // 变量值
-        remarks: update_timestamp   // 备注
+        remarks: "1"//update_timestamp   // 备注
     }];
 
     const update_options = {
