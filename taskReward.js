@@ -103,6 +103,7 @@ async function delates(token) {
                     body: JSON.stringify([item.id])   // 删除变量 id为ck的id值
                 });
                 const deleteResult = await deleteResponse.json();
+                console.log(JSON.stringify([item.id]));
                 console.log(JSON.stringify(deleteResult));
                 //await update(token);
             }
