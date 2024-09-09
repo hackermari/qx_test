@@ -105,11 +105,10 @@ async function delates(token) {
                     },
                     // 将 id 包装成对象数组
                     body: JSON.stringify([item.id])
-                    // body: JSON.stringify([{ id: Number(item.id) }])
                 };
 
                 $task.fetch(delete_options).then(response => {
-                    //await update(token);
+                    await update(token);
                     console.log(response.body);  // 输出返回的响应
                 }).catch(error => {
                     console.log(`Error deleting variable: ${error}`);
