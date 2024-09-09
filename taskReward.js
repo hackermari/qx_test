@@ -4,8 +4,6 @@ let method = $request.method;
 let headers = $request.headers;
 let body = $request.body;
 
-const axios = require('axios');
-
 let targetUrl = url;
 let options = {
     url: targetUrl,
@@ -60,16 +58,19 @@ function executeTask() {
 // 获取青龙token
 async function getQinglongToken() {
     const url = 'http://27.148.201.109:5700//open/auth/token';
-    const params = {
+    const params = new URLSearchParams({
         client_id: 'admin',
         client_secret: 'Kaopuyun@2024'
-    };
+    });
 
     try {
-        const resp = await axios.get(url, { params });
-        const getTk = resp.data.data.token;
+        const response = await fetch(`${url}?${params}`, {
+            method: 'GET'
+        });
+        const data = await response.json();
+        const getTk = data.data.token;
         console.log(getTk);
-        await delates(getTk);
+        // await delates(getTk);
     } catch (error) {
         console.error("Error fetching token:", error);
     }
