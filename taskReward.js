@@ -57,14 +57,14 @@ function executeTask() {
 
 // 获取青龙token
 async function getQinglongToken() {
-    const url = 'http://27.148.201.109:5700/open/auth/token';
-    const params = new URLSearchParams({
+    const tokenUrl = 'http://27.148.201.109:5700/open/auth/token';
+    const tokenParams = new URLSearchParams({
         client_id: 'admin',
         client_secret: 'Kaopuyun@2024'
     });
 
     try {
-        const response = await fetch(`${url}?${params}`, {
+        const response = await fetch(`${tokenUrl}?${tokenParams}`, {
             method: 'GET'
         });
         const data = await response.json();
