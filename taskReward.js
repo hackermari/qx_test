@@ -90,7 +90,7 @@ async function delates(token) {
         });
         const data = await response.json();
         const panduan = data.data;
-        console.log(panduan);
+
         // 删除变量
         for (const item of panduan) {
             if (item.name === 'zeekr_headers_x') {
@@ -104,7 +104,7 @@ async function delates(token) {
                 });
                 const deleteResult = await deleteResponse.json();
                 console.log(deleteResult);
-                await update(token);
+                //await update(token);
             }
         }
     } catch (error) {
