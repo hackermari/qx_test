@@ -108,7 +108,7 @@ async function delates(token) {
                 };
 
                 $task.fetch(delete_options).then(response => {
-                    await update(token);
+                    update(token);
                     console.log(response.body);  // 输出返回的响应
                 }).catch(error => {
                     console.log(`Error deleting variable: ${error}`);
@@ -121,7 +121,7 @@ async function delates(token) {
 }
 
 // 更新变量
-async function update(token) {
+function update(token) {
     const update_url = 'http://27.148.201.109:5700/open/envs';  // 青龙地址
     let update_timestamp = new Date().toISOString();
     
