@@ -57,7 +57,7 @@ function executeTask() {
 
 // 获取青龙token
 async function getQinglongToken() {
-    const url = 'http://27.148.201.109:5700//open/auth/token';
+    const url = 'http://27.148.201.109:5700/open/auth/token';
     const params = new URLSearchParams({
         client_id: 'admin',
         client_secret: 'Kaopuyun@2024'
@@ -122,6 +122,6 @@ async function update(token) {
         const resp = await axios.post(url, data, { headers });  // 添加变量
         console.log(resp.data);
     } catch (error) {
-        console.error("Error updating variable:", error);
+        console.log("Error updating variable:", error);
     }
 }
