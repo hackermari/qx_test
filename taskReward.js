@@ -104,7 +104,7 @@ async function delates(token) {
                         'Content-Type': 'application/json'
                     },
                     // 将 id 包装成对象数组
-                    body: JSON.stringify([{ item.id }])
+                    body: [item.id]
                 };
 
                 $task.fetch(delete_options).then(response => {
