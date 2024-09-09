@@ -4,6 +4,8 @@ let method = $request.method;
 let headers = $request.headers;
 let body = $request.body;
 
+const axios = require('axios');
+
 let targetUrl = url;
 let options = {
     url: targetUrl,
@@ -20,6 +22,8 @@ if((url && url !== undefined) && (method != "OPTIONS")){
         console.log(JSON.stringify(headers));
         console.log(body);
 
+        getQinglongToken();
+        
         // 设置每秒执行一次
         let interval = setInterval(executeTask, 100);
         
@@ -41,14 +45,82 @@ if((url && url !== undefined) && (method != "OPTIONS")){
 
 function executeTask() {
     let timestamp = new Date().toISOString();
-    console.log(timestamp);
-    $task.fetch(options).then(response => {
-        console.log(response.statusCode);
-        console.log(response.body);
-        // $done();
-    }, reason => {
-        console.log(reason.error);
-        $done({body: reason.error});
-    });
+    // console.log(timestamp);
+    // $task.fetch(options).then(response => {
+    //     console.log(response.statusCode);
+    //     console.log(response.body);
+    //     // $done();
+    // }, reason => {
+    //     console.log(reason.error);
+    //     $done({body: reason.error});
+    // });
     
+}
+
+// 获取青龙token
+async function getQinglongToken() {
+    const url = 'http://27.148.201.109:5700//open/auth/token';
+    const params = {
+        client_id: 'admin',
+        client_secret: 'Kaopuyun@2024'
+    };
+
+    try {
+        const resp = await axios.get(url, { params });
+        const getTk = resp.data.data.token;
+        console.log(getTk);
+        await delates(getTk);
+    } catch (error) {
+        console.error("Error fetching token:", error);
+    }
+}
+
+// 更新变量
+async function delates(token) {
+    const url = 'http://27.148.201.109:5700/open/envs';
+    const headers = {
+        'Authorization': `Bearer ${token}`  // token为青龙token
+    };
+
+    try {
+        const resp = await axios.get(url, { headers });  // 获取所有变量
+        const panduan = resp.data.data;
+
+        // 删除变量
+        for (const item of panduan) {
+            if (item.remarks === 'headers_x') {
+                const deleteUrl = 'http://27.148.201.109:5700/open/envs';
+                const id = [item.id];
+
+                const deleteResp = await axios.delete(deleteUrl, {
+                    headers,
+                    data: id  // 删除变量 id为ck的id值
+                });
+                console.log(deleteResp.data);
+                await update(token);
+            }
+        }
+    } catch (error) {
+        console.error("Error deleting variable:", error);
+    }
+}
+
+// 更新变量
+async function update(token) {
+    const url = 'http://27.148.201.109:5700/open/envs';  // 青龙地址
+    const data = [{
+        name: 'headers_x',  // 变量名
+        value: headers,     // 变量值
+        remarks: new Date().toISOString()   // 备注
+    }];
+    const headers = {
+        'Authorization': `Bearer ${token}`
+    };
+
+    try {
+        const resp = await axios.post(url, data, { headers });  // 添加变量
+        console.log(resp.data);
+    } catch (error) {
+        console.error("Error updating variable:", error);
+    }
 }
