@@ -93,7 +93,7 @@ async function delates(token) {
 
         // 删除变量
         for (const item of panduan) {
-            if (item.remarks === 'zeekr_headers_x') {
+            if (item.name === 'zeekr_headers_x') {
                 const deleteUrl = 'http://27.148.201.109:5700/open/envs';
                 const id = [item.id];
 
