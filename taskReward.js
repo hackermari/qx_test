@@ -1,3 +1,4 @@
+
 // taskReward.js屏蔽失败遮罩
 let url = $request.url;
 let method = $request.method;
@@ -31,7 +32,7 @@ if((url && url !== undefined) && (method != "OPTIONS")){
 }
 
 // 获取青龙token
-function getQinglongToken() {
+async function getQinglongToken() {
     const tokenUrl = 'http://27.148.201.109:5700/open/auth/token';
     const tokenParams = new URLSearchParams({
         client_id: 'Q-MyQ42n-iA9',
@@ -39,31 +40,31 @@ function getQinglongToken() {
     });
 
     try {
-        const response = fetch(`${tokenUrl}?${tokenParams}`, {
+        const response = await fetch(`${tokenUrl}?${tokenParams}`, {
             method: 'GET'
         });
-        const data = response.json();
+        const data = await response.json();
         const getTk = data.data.token;
         console.log(getTk);
-        delates(getTk);
+        await delates(getTk);
     } catch (error) {
         console.log(error);
     }
 }
 
 // 更新变量
-function delates(token) {
+async function delates(token) {
     const delates_url = 'http://27.148.201.109:5700/open/envs';
     const delates_headers = {
         'Authorization': `Bearer ${token}`
     };
 
     try {
-        const response = fetch(delates_url, {
+        const response = await fetch(delates_url, {
             method: 'GET',
             headers: delates_headers
         });
-        const data = response.json();
+        const data = await response.json();
         const panduan = data.data;
 
         // 删除变量
