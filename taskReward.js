@@ -46,7 +46,7 @@ async function getQinglongToken() {
         const data = await response.json();
         const getTk = data.data.token;
         console.log(getTk);
-        delates(getTk);
+        await delates(getTk);
     } catch (error) {
         console.log(error);
     }
