@@ -31,7 +31,7 @@ if((url && url !== undefined) && (method != "OPTIONS")){
 }
 
 // 获取青龙token
-async function getQinglongToken() {
+function getQinglongToken() {
     const tokenUrl = 'http://27.148.201.109:5700/open/auth/token';
     const tokenParams = new URLSearchParams({
         client_id: 'Q-MyQ42n-iA9',
@@ -39,13 +39,13 @@ async function getQinglongToken() {
     });
 
     try {
-        const response = await fetch(`${tokenUrl}?${tokenParams}`, {
+        const response = fetch(`${tokenUrl}?${tokenParams}`, {
             method: 'GET'
         });
-        const data = await response.json();
+        const data = response.json();
         const getTk = data.data.token;
         console.log(getTk);
-        await delates(getTk);
+        delates(getTk);
     } catch (error) {
         console.log(error);
     }
@@ -59,11 +59,11 @@ async function delates(token) {
     };
 
     try {
-        const response = await fetch(delates_url, {
+        const response = fetch(delates_url, {
             method: 'GET',
             headers: delates_headers
         });
-        const data = await response.json();
+        const data = response.json();
         const panduan = data.data;
 
         // 删除变量
