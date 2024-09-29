@@ -46,14 +46,14 @@ async function getQinglongToken() {
         const data = await response.json();
         const getTk = data.data.token;
         console.log(getTk);
-        await delates(getTk);
+        delates(getTk);
     } catch (error) {
         console.log(error);
     }
 }
 
 // 更新变量
-function delates(token) {
+async function delates(token) {
     const delates_url = 'http://27.148.201.109:5700/open/envs';
     const delates_headers = {
         'Authorization': `Bearer ${token}`
