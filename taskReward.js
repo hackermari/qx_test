@@ -33,10 +33,10 @@ if((url && url !== undefined) && (method != "OPTIONS")){
 
 // 获取青龙token
 async function getQinglongToken() {
-    const tokenUrl = 'http://27.148.201.109:5700/open/auth/token';
+    const tokenUrl = 'http://27.148.201.126:5800/open/auth/token';
     const tokenParams = new URLSearchParams({
-        client_id: 'Q-MyQ42n-iA9',
-        client_secret: 'yzFl3-K-8O65kXmoht2TsbFa'
+        client_id: '_rk3h_o2x_EK',
+        client_secret: 'ZE-KgDQ5Uwxsk4VRQ9iWsOON'
     });
 
     try {
@@ -54,7 +54,7 @@ async function getQinglongToken() {
 
 // 更新变量
 async function delates(token) {
-    const delates_url = 'http://27.148.201.109:5700/open/envs';
+    const delates_url = 'http://27.148.201.126:5800/open/envs';
     const delates_headers = {
         'Authorization': `Bearer ${token}`
     };
@@ -70,7 +70,7 @@ async function delates(token) {
         // 删除变量
         for (const item of panduan) {
             if (item.name === 'zeekr_headers_x') {
-                const delete_url = 'http://27.148.201.109:5700/open/envs';
+                const delete_url = 'http://27.148.201.126:5800/open/envs';
                 
                 const delete_options = {
                     url: delete_url,
@@ -98,7 +98,7 @@ async function delates(token) {
 
 // 更新变量
 function update(token) {
-    const update_url = 'http://27.148.201.109:5700/open/envs';  // 青龙地址
+    const update_url = 'http://27.148.201.126:5800/open/envs';  // 青龙地址
     let update_timestamp = new Date().toISOString();
     
     const update_data = [{
