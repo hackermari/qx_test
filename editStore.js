@@ -1,5 +1,5 @@
 // api-gw-toc.js
-let body = $response.body;
+let body = $response;
 let obj;
 
 if(body){
