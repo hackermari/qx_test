@@ -1,8 +1,7 @@
 // api-gw-toc.js
-let body = $response;
+let body = $response.body;
 let obj;
-
-if(body){
+if(body && body !== undefined){
     
     try {
         let obj = JSON.parse(body);
