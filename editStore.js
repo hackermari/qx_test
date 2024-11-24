@@ -2,7 +2,7 @@
 let body = $response.body;
 let obj;
 
-if(body && body !== undefined){
+if(body){
     
     try {
         let obj = JSON.parse(body);
