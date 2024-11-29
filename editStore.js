@@ -21,7 +21,7 @@ if(body && body !== undefined){
                 "ownPerson": "1742099963829252096",
                 "tourActFlag": "0",
                 "personId": "1742099963829252096",
-                "storeId": "Z368",
+                "storeId": "Z321",
                 "createTime": "2024-11-23 13:41:57",
                 "validity": "1440",
                 "businessType": "999999",
