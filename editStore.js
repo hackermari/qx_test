@@ -12,8 +12,6 @@ if(body && body !== undefined){
         // 修改 data 字段的值为新的日期时间
         if (obj && obj !== undefined) {
             obj.data = {
-              "code" : "000000",
-              "data" : {
                 "businessType" : "999999",
                 "storeId" : "Z367",
                 "tourActFlag" : "0",
@@ -33,9 +31,6 @@ if(body && body !== undefined){
                 "pathway" : "QR_CODE",
                 "validity" : 1440,
                 "needRailFlag" : "1"
-              },
-              "msg" : "成功",
-              "date" : "1732956122199"
             };
             // 打印修改后的返回值到日志
             console.log(JSON.stringify(obj));
