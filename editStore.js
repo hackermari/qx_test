@@ -12,26 +12,27 @@ if(body && body !== undefined){
         // 修改 data 字段的值为新的日期时间
         if (obj && obj !== undefined) {
             obj.data = {
-                "businessType" : "999999",
-                "storeId" : "Z367",
-                "tourActFlag" : "0",
+                "verifyCode" : "1025339560940535808",
                 "activityCode" : "ACT_STORE_SIGN",
-                "personId" : "1816187918083670016",
-                "activityType" : 1,
-                "ownOrgan" : "2023",
-                "activityId" : "XXT1684127854",
-                "sourceId" : "sourceyxhd",
-                "personIdType" : "ADMIN_ID",
-                "drawActivityId" : "1660642112787451905",
-                "identities" : "LAN1684131341",
-                "expertFlag" : "0",
-                "createTime" : "2024-12-06 00:29:15",
-                "ownPerson" : "1816187918083670016",
-                "intentionSeries" : "8897",
+                "intentionSeries" : "7440",
                 "pathway" : "QR_CODE",
-                "validity" : 1440,
-                "needRailFlag" : "1"
-            };
+                "drawActivityId" : "1660642112787451905",
+                "activityType" : 1,
+                "activityId" : "XXT1684127854",
+                "storeId" : "Z367",
+                "identities" : "LAN1684131341",
+                "sourceId" : "sourceyxhd",
+                "ownPerson" : "1812534115622076416",
+                "ownOrgan" : "2023",
+                "needRailFlag" : "1",
+                "validity" : "1440",
+                "businessType" : "999999",
+                "personIdType" : "ADMIN_ID",
+                "personId" : "1812534115622076416",
+                "createTime" : "2024-12-07 19:40:11",
+                "expertFlag" : "0",
+                "tourActFlag" : "0"
+            },
             // 打印修改后的返回值到日志
             console.log(JSON.stringify(obj));
             
