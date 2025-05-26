@@ -31,6 +31,23 @@ if((url && url !== undefined) && (method != "OPTIONS")){
     $done();
 }
 
+async function fetchWithRetry(url, options, retries = 10, delay = 1000) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const response = await fetch(url, options);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response;
+        } catch (error) {
+            console.log(`Request failed (attempt ${i + 1}): ${error}`);
+            if (i < retries - 1) {
+                await new Promise(resolve => setTimeout(resolve, delay));
+            } else {
+                throw error;
+            }
+        }
+    }
+}
+
 // 获取青龙token
 async function getQinglongToken() {
     const tokenUrl = 'http://27.148.201.126:5800/open/auth/token';
@@ -40,7 +57,7 @@ async function getQinglongToken() {
     });
 
     try {
-        const response = await fetch(`${tokenUrl}?${tokenParams}`, {
+        const response = await fetchWithRetry(`${tokenUrl}?${tokenParams}`, {
             method: 'GET'
         });
         const data = await response.json();
@@ -60,7 +77,7 @@ async function delates(token) {
     };
 
     try {
-        const response = await fetch(delates_url, {
+        const response = await fetchWithRetry(delates_url, {
             method: 'GET',
             headers: delates_headers
         });
@@ -83,7 +100,7 @@ async function delates(token) {
                     body: JSON.stringify([item.id])
                 };
 
-                $task.fetch(delete_options).then(response => {
+                $task.fetchWithRetry(delete_options).then(response => {
                     update(token);
                     console.log(response.body);  // 输出返回的响应
                 }).catch(error => {
@@ -117,7 +134,7 @@ function update(token) {
         body: JSON.stringify(update_data)
     };
 
-    $task.fetch(update_options).then(response => {
+    $task.fetchWithRetry(update_options).then(response => {
         console.log(response.body);
     }).catch(error => {
         console.log(`Error updating variable: ${error}`);
