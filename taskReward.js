@@ -101,7 +101,7 @@ async function delates(token) {
 
                 taskFetchWithRetry(delete_options).then(response => {
                     update(token);
-                    console.log(response.body);  // 输出返回的响应
+                    console.log(response);  // 输出返回的响应
                 })
                 .catch(error => {
                     console.log(`Error deleting variable: ${error}`);
