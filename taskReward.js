@@ -105,7 +105,7 @@ async function delates(token) {
                 })
                 .catch(error => {
                     console.log(`Error deleting variable: ${error}`);
-                };
+                });
             }
         }
     } catch (error) {
@@ -134,7 +134,7 @@ function update(token) {
         body: JSON.stringify(update_data)
     };
     
-    fetchWithRetry(update_url, update_options, 10, 1000)
+    fetchWithRetry(update_options, 10, 1000)
     .then(async response => {
         const resBody = await response.text();
         console.log(resBody);
