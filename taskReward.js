@@ -59,7 +59,7 @@ async function getQinglongToken() {
         const response = await fetchWithRetry(`${tokenUrl}?${tokenParams}`, {
             method: 'GET'
         });
-        const data = await response.json();
+        const data = JSON.parse(response.body);
         const getTk = data.data.token;
         console.log(getTk);
         delates(getTk);
@@ -80,7 +80,7 @@ async function delates(token) {
             method: 'GET',
             headers: delates_headers
         });
-        const data = await response.json();
+        const data = JSON.parse(response.body);
         const panduan = data.data;
 
         // 删除变量
