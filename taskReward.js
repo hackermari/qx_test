@@ -31,7 +31,7 @@ if((url && url !== undefined) && (method != "OPTIONS")){
     $done();
 }
 
-async function taskFetchWithRetry(options, retries = 10, delay = 1000) {
+async function fetchWithRetry(options, retries = 10, delay = 1000) {
     for (let i = 0; i < retries; i++) {
         try {
             const response = await $task.fetch(options);
@@ -102,7 +102,8 @@ async function delates(token) {
                 taskFetchWithRetry(delete_options).then(response => {
                     update(token);
                     console.log(response.body);  // 输出返回的响应
-                }).catch(error => {
+                })
+                .catch(error => {
                     console.log(`Error deleting variable: ${error}`);
                 };
             }
@@ -132,6 +133,7 @@ function update(token) {
         },
         body: JSON.stringify(update_data)
     };
+    
     fetchWithRetry(update_url, update_options, 3, 1000)
     .then(async response => {
         const resBody = await response.text();
