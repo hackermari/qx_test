@@ -31,14 +31,13 @@ if((url && url !== undefined) && (method != "OPTIONS")){
     $done();
 }
 
-async function fetchWithRetry(url, options, retries = 10, delay = 1000) {
+async function taskFetchWithRetry(options, retries = 10, delay = 1000) {
     for (let i = 0; i < retries; i++) {
         try {
-            const response = await fetch(url, options);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const response = await $task.fetch(options);
             return response;
         } catch (error) {
-            console.log(`Request failed (attempt ${i + 1}): ${error}`);
+            console.log(`$task.fetch failed (attempt ${i + 1}): ${error}`);
             if (i < retries - 1) {
                 await new Promise(resolve => setTimeout(resolve, delay));
             } else {
@@ -100,12 +99,12 @@ async function delates(token) {
                     body: JSON.stringify([item.id])
                 };
 
-                $task.fetchWithRetry(delete_options).then(response => {
+                taskFetchWithRetry(delete_options).then(response => {
                     update(token);
                     console.log(response.body);  // 输出返回的响应
                 }).catch(error => {
                     console.log(`Error deleting variable: ${error}`);
-                });
+                };
             }
         }
     } catch (error) {
@@ -133,10 +132,12 @@ function update(token) {
         },
         body: JSON.stringify(update_data)
     };
-
-    $task.fetchWithRetry(update_options).then(response => {
-        console.log(response.body);
-    }).catch(error => {
+    fetchWithRetry(update_url, update_options, 3, 1000)
+    .then(async response => {
+        const resBody = await response.text();
+        console.log(resBody);
+    })
+    .catch(error => {
         console.log(`Error updating variable: ${error}`);
     });
     
