@@ -1,78 +1,86 @@
-/***********************************************
- * 最终版本（所有 GetCustomer 强制替换 openid+token）
- *
- * GetCustomer → 替换 openid & Authorization
- * AddCustomer → 替换 Authorization，仅此
- ***********************************************/
+/*
+Quantumult X 自定义请求处理脚本
+功能：
+- 拦截 GetCustomer & AddCustomer 请求
+- 自动替换 openid（URL、body、headers）
+- 自动替换 Authorization Bearer Token
+- 打印最终 headers
+*/
 
-// ===== 工具函数 =====
-function randomString(len) {
+function randomOpenid() {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let s = "";
-    for (let i = 0; i < len; i++) {
-        s += chars[Math.floor(Math.random() * chars.length)];
-    }
-    return s;
+    let result = "oSG6Nj";
+    for (let i = 0; i < 20; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+    return result;
 }
 
-// 微信风格 openid
-function randomOpenId() {
-    return "o" + randomString(27);
+function randomToken() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let token = "";
+    for (let i = 0; i < 64; i++) token += chars.charAt(Math.floor(Math.random() * chars.length));
+    return "Bearer " + token;
 }
-
-// base64url
-function base64url(str) {
-    return btoa(str)
-        .replace(/\+/g, "-")
-        .replace(/\//g, "_")
-        .replace(/=+$/, "");
-}
-
-// 生成合法结构 JWT
-function generateFakeJWT() {
-    const header = { alg: "HS256", typ: "JWT" };
-    const payload = {
-        ExpireTime: Date.now() + 30 * 60 * 1000,
-        RequestId: randomString(16)
-    };
-
-    const h = base64url(JSON.stringify(header));
-    const p = base64url(JSON.stringify(payload));
-    const s = randomString(43); // 随机 signature 即可
-
-    return `${h}.${p}.${s}`;
-}
-
-// ===== 主逻辑 =====
 
 let url = $request.url;
+let method = $request.method;
 let headers = $request.headers;
+let body = $request.body;
 
-// 处理 GetCustomer：始终替换 openid + token
-if (url.includes("/api/activity/GetCustomer")) {
+let newOpenid = randomOpenid();
+let newAuth = randomToken();
 
-    // 若已有原始 openid，则替换之
-    if (url.includes("openid=")) {
-        url = url.replace(/openid=[^&]*/i, `openid=${randomOpenId()}`);
-    } else {
-        // 没有则追加
-        url = url.includes("?")
-            ? `${url}&openid=${randomOpenId()}`
-            : `${url}?openid=${randomOpenId()}`;
+let isGetCustomer = url.includes("/GetCustomer");
+let isAddCustomer = url.includes("/AddCustomer");
+
+// ------------------------
+// 处理 GetCustomer
+// ------------------------
+if (isGetCustomer) {
+    // 替换 URL 参数 openid
+    url = url.replace(/openid=[^&]+/, `openid=${newOpenid}`);
+
+    // 替换 Authorization
+    headers["Authorization"] = newAuth;
+
+    console.log("=== GetCustomer Request Modified ===");
+    console.log("URL:", url);
+    console.log("Headers:", JSON.stringify(headers, null, 2));
+
+    $done({ url, headers });
+    return;
+}
+
+// ------------------------
+// 处理 AddCustomer
+// ------------------------
+if (isAddCustomer) {
+    // 修改 header Authorization
+    headers["Authorization"] = newAuth;
+
+    // 修改 body 中 openid
+    if (body) {
+        try {
+            if (body.startsWith("{")) {
+                // JSON
+                let json = JSON.parse(body);
+                json.openid = newOpenid;
+                body = JSON.stringify(json);
+            } else {
+                // form-urlencoded
+                body = body.replace(/openid=[^&]+/, `openid=${newOpenid}`);
+            }
+        } catch (e) {
+            console.log("Body parse error:", e);
+        }
     }
 
-    headers["Authorization"] = "Bearer " + generateFakeJWT();
+    console.log("=== AddCustomer Request Modified ===");
+    console.log("Headers:", JSON.stringify(headers, null, 2));
+    console.log("Body:", body);
 
-    $done({ url, headers });
+    $done({ headers, body });
     return;
 }
 
-// 处理 AddCustomer：只替换 token
-if (url.includes("/api/activity/AddCustomer")) {
-    headers["Authorization"] = "Bearer " + generateFakeJWT();
-    $done({ url, headers });
-    return;
-}
-
-// 默认放行
+// 默认不处理
 $done({});
