@@ -1,19 +1,33 @@
 /*
-Quantumult X 自定义请求处理脚本
-功能：
-- 拦截 GetCustomer & AddCustomer 请求
-- 自动替换 openid（URL、body、headers）
-- 自动替换 Authorization Bearer Token
-- 打印最终 headers
+增强版 Quantumult X 脚本
+GetCustomer：
+  - 替换 openid（URL参数）
+  - 替换 Authorization
+AddCustomer：
+  - 替换 body.openid
+  - 替换 Authorization
+  - 打印最终 headers
+
+新增：
+  - openid 基于原始openid 并按10分钟生成稳定混合openid
 */
 
-function randomOpenid() {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "oSG6Nj";
-    for (let i = 0; i < 20; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
-    return result;
+// 生成稳定 openid（10分钟不变）
+function stableOpenid(original) {
+    const timeSlot = Math.floor(Date.now() / 600000);
+    const str = original + "-" + timeSlot;
+
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0;
+    }
+
+    const base = Math.abs(hash).toString(36).padEnd(24, "0");
+    return "o" + base.substring(0, 27);
 }
 
+// Fake Token
 function randomToken() {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let token = "";
@@ -22,27 +36,32 @@ function randomToken() {
 }
 
 let url = $request.url;
-let method = $request.method;
 let headers = $request.headers;
 let body = $request.body;
-
-let newOpenid = randomOpenid();
-let newAuth = randomToken();
 
 let isGetCustomer = url.includes("/GetCustomer");
 let isAddCustomer = url.includes("/AddCustomer");
 
+let newAuth = randomToken();
+
+// 从 URL 中提取原始 openid
+function getOriginalOpenidFromURL(url) {
+    let match = url.match(/openid=([^&]+)/);
+    return match ? decodeURIComponent(match[1]) : null;
+}
+
 // ------------------------
-// 处理 GetCustomer
+// GetCustomer
 // ------------------------
 if (isGetCustomer) {
-    // 替换 URL 参数 openid
-    url = url.replace(/openid=[^&]+/, `openid=${newOpenid}`);
 
-    // 替换 Authorization
+    const original = getOriginalOpenidFromURL(url);
+    const newOpenid = stableOpenid(original);
+
+    url = url.replace(/openid=[^&]+/, `openid=${newOpenid}`);
     headers["Authorization"] = newAuth;
 
-    console.log("=== GetCustomer Request Modified ===");
+    console.log("=== GetCustomer Modified ===");
     console.log("URL:", url);
     console.log("Headers:", JSON.stringify(headers, null, 2));
 
@@ -51,30 +70,28 @@ if (isGetCustomer) {
 }
 
 // ------------------------
-// 处理 AddCustomer
+// AddCustomer
 // ------------------------
 if (isAddCustomer) {
+
     // 修改 header Authorization
     headers["Authorization"] = newAuth;
 
-    // 修改 body 中 openid
     if (body) {
         try {
             if (body.startsWith("{")) {
-                // JSON
+                // JSON body
                 let json = JSON.parse(body);
-                json.openid = newOpenid;
+                const original = json.openid;
+                json.openid = stableOpenid(original);
                 body = JSON.stringify(json);
-            } else {
-                // form-urlencoded
-                body = body.replace(/openid=[^&]+/, `openid=${newOpenid}`);
             }
-        } catch (e) {
-            console.log("Body parse error:", e);
+        } catch (err) {
+            console.log("Body parse error:", err);
         }
     }
 
-    console.log("=== AddCustomer Request Modified ===");
+    console.log("=== AddCustomer Modified ===");
     console.log("Headers:", JSON.stringify(headers, null, 2));
     console.log("Body:", body);
 
@@ -82,5 +99,4 @@ if (isAddCustomer) {
     return;
 }
 
-// 默认不处理
 $done({});
